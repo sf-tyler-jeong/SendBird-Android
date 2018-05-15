@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(PreferenceUtils.getConnected()) {
+        if (PreferenceUtils.getConnected()) {
             connectToSendBird(PreferenceUtils.getUserId(), PreferenceUtils.getNickname());
         }
     }
@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
         showProgressBar(true);
         mConnectButton.setEnabled(false);
 
-        ConnectionManager.login(userId, new SendBird.ConnectHandler() {
+        SendBird.connect(userId, new SendBird.ConnectHandler() {
             @Override
             public void onConnected(User user, SendBirdException e) {
                 // Callback received; hide the progress bar.

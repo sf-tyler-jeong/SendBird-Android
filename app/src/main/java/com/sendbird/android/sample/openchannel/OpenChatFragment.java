@@ -43,7 +43,6 @@ import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
 import com.sendbird.android.UserMessage;
 import com.sendbird.android.sample.R;
-import com.sendbird.android.sample.main.ConnectionManager;
 import com.sendbird.android.sample.utils.FileUtils;
 import com.sendbird.android.sample.utils.MediaPlayerActivity;
 import com.sendbird.android.sample.utils.PhotoViewerActivity;
@@ -59,7 +58,6 @@ public class OpenChatFragment extends Fragment {
     private static final String LOG_TAG = OpenChatFragment.class.getSimpleName();
 
     private static final int CHANNEL_LIST_LIMIT = 30;
-    private static final String CONNECTION_HANDLER_ID = "CONNECTION_HANDLER_OPEN_CHAT";
     private static final String CHANNEL_HANDLER_ID = "CHANNEL_HANDLER_OPEN_CHAT";
 
     private static final int STATE_NORMAL = 0;
@@ -232,17 +230,6 @@ public class OpenChatFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        ConnectionManager.addConnectionManagementHandler(CONNECTION_HANDLER_ID, new ConnectionManager.ConnectionManagementHandler() {
-            @Override
-            public void onConnected(boolean reconnect) {
-                if (reconnect) {
-                    refresh();
-                } else {
-                    refreshFirst();
-                }
-            }
-        });
-
         SendBird.addChannelHandler(CHANNEL_HANDLER_ID, new SendBird.ChannelHandler() {
             @Override
             public void onMessageReceived(BaseChannel baseChannel, BaseMessage baseMessage) {
@@ -268,15 +255,14 @@ public class OpenChatFragment extends Fragment {
                 }
             }
         });
+
+        refresh();
     }
-
-
 
     @Override
     public void onPause() {
-        ConnectionManager.removeConnectionManagementHandler(CONNECTION_HANDLER_ID);
-        SendBird.removeChannelHandler(CHANNEL_HANDLER_ID);
         super.onPause();
+        SendBird.removeChannelHandler(CHANNEL_HANDLER_ID);
     }
 
     @Override
@@ -542,50 +528,28 @@ public class OpenChatFragment extends Fragment {
         }
     }
 
-    private void refreshFirst() {
-        enterChannel(mChannelUrl);
-    }
-
-    /**
-     * Enters an Open Channel.
-     * <p>
-     * A user must successfully enter a channel before being able to load or send messages
-     * within the channel.
-     *
-     * @param channelUrl The URL of the channel to enter.
-     */
-    private void enterChannel(String channelUrl) {
-        OpenChannel.getChannel(channelUrl, new OpenChannel.OpenChannelGetHandler() {
-            @Override
-            public void onResult(final OpenChannel openChannel, SendBirdException e) {
-                if (e != null) {
-                    // Error!
-                    e.printStackTrace();
-                    return;
-                }
-
-                // Enter the channel
-                openChannel.enter(new OpenChannel.OpenChannelEnterHandler() {
-                    @Override
-                    public void onResult(SendBirdException e) {
-                        if (e != null) {
-                            // Error!
-                            e.printStackTrace();
-                            return;
-                        }
-
-                        mChannel = openChannel;
-
-                        if (getActivity() != null) {
-                            // Set action bar title to name of channel
-                            ((OpenChannelActivity) getActivity()).setActionBarTitle(mChannel.getName());
-                        }
-
-                        refresh();
+    private void refresh() {
+        if (mChannelUrl != null && mChannelUrl.length() > 0) {
+            OpenChannel.getChannel(mChannelUrl, new OpenChannel.OpenChannelGetHandler() {
+                @Override
+                public void onResult(final OpenChannel openChannel, SendBirdException e) {
+                    if (e != null) {
+                        // Error!
+                        e.printStackTrace();
+                        return;
                     }
-                });
-            }
-        });
+
+                    mChannel = openChannel;
+
+                    if (getActivity() != null) {
+                        // Set action bar title to name of channel
+                        ((OpenChannelActivity) getActivity()).setActionBarTitle(mChannel.getName());
+                    }
+
+                    loadInitialMessageList();
+                }
+            });
+        }
     }
 
     private void sendUserMessage(String text) {
@@ -640,7 +604,7 @@ public class OpenChatFragment extends Fragment {
         }
     }
 
-    private void refresh() {
+    private void loadInitialMessageList() {
         loadInitialMessageList(CHANNEL_LIST_LIMIT);
     }
 
@@ -707,7 +671,7 @@ public class OpenChatFragment extends Fragment {
                     return;
                 }
 
-                refresh();
+                loadInitialMessageList();
             }
         });
     }
@@ -728,7 +692,7 @@ public class OpenChatFragment extends Fragment {
                     return;
                 }
 
-                refresh();
+                loadInitialMessageList();
             }
         });
     }

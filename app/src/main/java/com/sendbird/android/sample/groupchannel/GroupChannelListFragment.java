@@ -24,7 +24,6 @@ import com.sendbird.android.GroupChannelListQuery;
 import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
 import com.sendbird.android.sample.R;
-import com.sendbird.android.sample.main.ConnectionManager;
 
 import java.util.List;
 
@@ -36,7 +35,6 @@ public class GroupChannelListFragment extends Fragment {
     private static final int INTENT_REQUEST_NEW_GROUP_CHANNEL = 302;
 
     private static final int CHANNEL_LIST_LIMIT = 15;
-    private static final String CONNECTION_HANDLER_ID = "CONNECTION_HANDLER_GROUP_CHANNEL_LIST";
     private static final String CHANNEL_HANDLER_ID = "CHANNEL_HANDLER_GROUP_CHANNEL_LIST";
 
     private RecyclerView mRecyclerView;
@@ -95,14 +93,9 @@ public class GroupChannelListFragment extends Fragment {
 
     @Override
     public void onResume() {
-        Log.d("LIFECYCLE", "GroupChannelListFragment onResume()");
+        super.onResume();
 
-        ConnectionManager.addConnectionManagementHandler(CONNECTION_HANDLER_ID, new ConnectionManager.ConnectionManagementHandler() {
-            @Override
-            public void onConnected(boolean reconnect) {
-                refresh();
-            }
-        });
+        Log.d("LIFECYCLE", "GroupChannelListFragment onResume()");
 
         SendBird.addChannelHandler(CHANNEL_HANDLER_ID, new SendBird.ChannelHandler() {
             @Override
@@ -121,18 +114,18 @@ public class GroupChannelListFragment extends Fragment {
             }
         });
 
-        super.onResume();
+        refresh();
     }
 
     @Override
     public void onPause() {
+        super.onPause();
+
         mChannelListAdapter.save();
 
         Log.d("LIFECYCLE", "GroupChannelListFragment onPause()");
 
-        ConnectionManager.removeConnectionManagementHandler(CONNECTION_HANDLER_ID);
         SendBird.removeChannelHandler(CHANNEL_HANDLER_ID);
-        super.onPause();
     }
 
     @Override

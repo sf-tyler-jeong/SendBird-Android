@@ -14,7 +14,6 @@ import com.sendbird.android.Member;
 import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
 import com.sendbird.android.sample.R;
-import com.sendbird.android.sample.main.ConnectionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,6 @@ import java.util.List;
 
 public class MemberListActivity extends AppCompatActivity{
 
-    private static final String CONNECTION_HANDLER_ID = "CONNECTION_HANDLER_MEMBER_LIST";
     static final String EXTRA_CHANNEL_URL = "EXTRA_CHANNEL_URL";
     static final String EXTRA_USER_ID = "EXTRA_USER_ID";
     static final String EXTRA_USER_PROFILE_URL = "EXTRA_USER_PROFILE_URL";
@@ -59,19 +57,12 @@ public class MemberListActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
 
-        ConnectionManager.addConnectionManagementHandler(CONNECTION_HANDLER_ID, new ConnectionManager.ConnectionManagementHandler() {
-            @Override
-            public void onConnected(boolean reconnect) {
-                getChannelFromUrl(mChannelUrl);
-            }
-        });
+        getChannelFromUrl(mChannelUrl);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        ConnectionManager.removeConnectionManagementHandler(CONNECTION_HANDLER_ID);
     }
 
     private void setUpRecyclerView() {

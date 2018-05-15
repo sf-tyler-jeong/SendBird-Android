@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 //                    Toast.makeText(MainActivity.this, "All push tokens unregistered.", Toast.LENGTH_SHORT).show();
                 }
 
-                ConnectionManager.logout(new SendBird.DisconnectHandler() {
+                SendBird.disconnect(new SendBird.DisconnectHandler() {
                     @Override
                     public void onDisconnected() {
                         PreferenceUtils.setConnected(false);

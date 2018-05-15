@@ -8,13 +8,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.sendbird.android.SendBird;
+import com.sendbird.android.SendBirdException;
+import com.sendbird.android.User;
 import com.sendbird.android.sample.R;
+import com.sendbird.android.sample.utils.PreferenceUtils;
 
 
 public class GroupChannelActivity extends AppCompatActivity{
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_channel);
 
@@ -25,19 +29,37 @@ public class GroupChannelActivity extends AppCompatActivity{
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_left_white_24_dp);
         }
 
+        boolean fromPushNotification = getIntent().getBooleanExtra("fromPushNotification", false);
+        final String channelUrl = getIntent().getStringExtra("groupChannelUrl");
+        if (fromPushNotification) {
+            SendBird.connect(PreferenceUtils.getUserId(), new SendBird.ConnectHandler() {
+                @Override
+                public void onConnected(User user, SendBirdException e) {
+                    if (e != null) {
+                        e.printStackTrace();
+                        return;
+                    }
+
+                    showFragment(savedInstanceState, channelUrl);
+                }
+            });
+        } else {
+            showFragment(savedInstanceState, channelUrl);
+        }
+    }
+
+    private void showFragment(Bundle savedInstanceState, String channelUrl) {
         if (savedInstanceState == null) {
             // Load list of Group Channels
             Fragment fragment = GroupChannelListFragment.newInstance();
 
             FragmentManager manager = getSupportFragmentManager();
             manager.popBackStack();
-
             manager.beginTransaction()
                     .replace(R.id.container_group_channel, fragment)
                     .commit();
         }
 
-        String channelUrl = getIntent().getStringExtra("groupChannelUrl");
         if(channelUrl != null) {
             // If started from notification
             Fragment fragment = GroupChatFragment.newInstance(channelUrl);

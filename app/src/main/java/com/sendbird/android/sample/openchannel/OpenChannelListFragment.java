@@ -17,7 +17,6 @@ import com.sendbird.android.OpenChannel;
 import com.sendbird.android.OpenChannelListQuery;
 import com.sendbird.android.SendBirdException;
 import com.sendbird.android.sample.R;
-import com.sendbird.android.sample.main.ConnectionManager;
 
 import java.util.List;
 
@@ -30,7 +29,6 @@ public class OpenChannelListFragment extends Fragment {
     private static final int INTENT_REQUEST_NEW_OPEN_CHANNEL = 402;
 
     private static final int CHANNEL_LIST_LIMIT = 15;
-    private static final String CONNECTION_HANDLER_ID = "CONNECTION_HANDLER_OPEN_CHANNEL_LIST";
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
@@ -88,19 +86,12 @@ public class OpenChannelListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        ConnectionManager.addConnectionManagementHandler(CONNECTION_HANDLER_ID, new ConnectionManager.ConnectionManagementHandler() {
-            @Override
-            public void onConnected(boolean reconnect) {
-                refresh();
-            }
-        });
+        refresh();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        ConnectionManager.removeConnectionManagementHandler(CONNECTION_HANDLER_ID);
     }
 
     @Override
@@ -133,13 +124,23 @@ public class OpenChannelListFragment extends Fragment {
     private void setUpChannelListAdapter() {
         mChannelListAdapter.setOnItemClickListener(new OpenChannelListAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(OpenChannel channel) {
-                String channelUrl = channel.getUrl();
-                OpenChatFragment fragment = OpenChatFragment.newInstance(channelUrl);
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.container_open_channel, fragment)
-                        .addToBackStack(null)
-                        .commit();
+            public void onItemClick(final OpenChannel channel) {
+                channel.enter(new OpenChannel.OpenChannelEnterHandler() {
+                    @Override
+                    public void onResult(SendBirdException e) {
+                        if (e != null) {
+                            e.printStackTrace();
+                            return;
+                        }
+
+                        String channelUrl = channel.getUrl();
+                        OpenChatFragment fragment = OpenChatFragment.newInstance(channelUrl);
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.container_open_channel, fragment)
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                });
             }
         });
 

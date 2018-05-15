@@ -17,13 +17,10 @@ import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
 import com.sendbird.android.User;
 import com.sendbird.android.sample.R;
-import com.sendbird.android.sample.main.ConnectionManager;
 import com.sendbird.android.sample.utils.ImageUtils;
 
 
 public class MemberInfoActivity extends AppCompatActivity{
-
-    private static final String CONNECTION_HANDLER_ID = "CONNECTION_HANDLER_MEMBER_INFO";
 
     private String mChannelUrl;
     private String mUserId;
@@ -99,19 +96,12 @@ public class MemberInfoActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
 
-        ConnectionManager.addConnectionManagementHandler(CONNECTION_HANDLER_ID, new ConnectionManager.ConnectionManagementHandler() {
-            @Override
-            public void onConnected(boolean reconnect) {
-                getUserFromUrl(mChannelUrl);
-            }
-        });
+        getUserFromUrl(mChannelUrl);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        ConnectionManager.removeConnectionManagementHandler(CONNECTION_HANDLER_ID);
     }
 
     @Override

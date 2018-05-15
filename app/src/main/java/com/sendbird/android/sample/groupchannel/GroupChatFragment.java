@@ -44,12 +44,13 @@ import com.sendbird.android.Member;
 import com.sendbird.android.PreviousMessageListQuery;
 import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
+import com.sendbird.android.User;
 import com.sendbird.android.UserMessage;
 import com.sendbird.android.sample.R;
-import com.sendbird.android.sample.main.ConnectionManager;
 import com.sendbird.android.sample.utils.FileUtils;
 import com.sendbird.android.sample.utils.MediaPlayerActivity;
 import com.sendbird.android.sample.utils.PhotoViewerActivity;
+import com.sendbird.android.sample.utils.PreferenceUtils;
 import com.sendbird.android.sample.utils.TextUtils;
 import com.sendbird.android.sample.utils.UrlPreviewInfo;
 import com.sendbird.android.sample.utils.WebUtils;
@@ -68,7 +69,6 @@ public class GroupChatFragment extends Fragment {
     private static final String LOG_TAG = GroupChatFragment.class.getSimpleName();
 
     private static final int CHANNEL_LIST_LIMIT = 30;
-    private static final String CONNECTION_HANDLER_ID = "CONNECTION_HANDLER_GROUP_CHAT";
     private static final String CHANNEL_HANDLER_ID = "CHANNEL_HANDLER_GROUP_CHANNEL_CHAT";
 
     private static final int STATE_NORMAL = 0;
@@ -280,13 +280,6 @@ public class GroupChatFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        ConnectionManager.addConnectionManagementHandler(CONNECTION_HANDLER_ID, new ConnectionManager.ConnectionManagementHandler() {
-            @Override
-            public void onConnected(boolean reconnect) {
-                refresh();
-            }
-        });
-
         mChatAdapter.setContext(getActivity()); // Glide bug fix (java.lang.IllegalArgumentException: You cannot start a load for a destroyed activity)
 
         // Gets channel from URL user requested
@@ -333,17 +326,17 @@ public class GroupChatFragment extends Fragment {
                     displayTyping(typingUsers);
                 }
             }
-
         });
+
+        refresh();
     }
 
     @Override
     public void onPause() {
-        setTypingStatus(false);
-
-        ConnectionManager.removeConnectionManagementHandler(CONNECTION_HANDLER_ID);
-        SendBird.removeChannelHandler(CHANNEL_HANDLER_ID);
         super.onPause();
+
+        setTypingStatus(false);
+        SendBird.removeChannelHandler(CHANNEL_HANDLER_ID);
     }
 
     @Override

@@ -16,7 +16,6 @@ import com.sendbird.android.User;
 import com.sendbird.android.UserListQuery;
 import com.sendbird.android.sample.R;
 import com.sendbird.android.sample.groupchannel.UserListAdapter;
-import com.sendbird.android.sample.main.ConnectionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +25,6 @@ import java.util.List;
  */
 
 public class ParticipantListActivity extends AppCompatActivity {
-
-    private static final String CONNECTION_HANDLER_ID = "CONNECTION_HANDLER_PARTICIPANT_LIST";
 
     private UserListAdapter mListAdapter;
     private RecyclerView mRecyclerView;
@@ -58,20 +55,12 @@ public class ParticipantListActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-
-        ConnectionManager.addConnectionManagementHandler(CONNECTION_HANDLER_ID, new ConnectionManager.ConnectionManagementHandler() {
-            @Override
-            public void onConnected(boolean reconnect) {
-                getChannelFromUrl(mChannelUrl);
-            }
-        });
+        getChannelFromUrl(mChannelUrl);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
-        ConnectionManager.removeConnectionManagementHandler(CONNECTION_HANDLER_ID);
     }
 
     @Override
