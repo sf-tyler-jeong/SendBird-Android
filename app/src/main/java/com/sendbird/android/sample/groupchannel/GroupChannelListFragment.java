@@ -36,6 +36,7 @@ public class GroupChannelListFragment extends Fragment {
 
     private static final int CHANNEL_LIST_LIMIT = 15;
     private static final String CHANNEL_HANDLER_ID = "CHANNEL_HANDLER_GROUP_CHANNEL_LIST";
+    private static final String NETWORK_HANDLER_ID = "NETWORK_HANDLER_GROUP_CHANNEL_LIST";
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
@@ -115,6 +116,13 @@ public class GroupChannelListFragment extends Fragment {
         });
 
         refresh();
+
+        SendBird.addNetworkHandler(NETWORK_HANDLER_ID, new SendBird.NetworkHandler() {
+            @Override
+            public void onNetworkReconnected() {
+                refresh();
+            }
+        });
     }
 
     @Override
@@ -126,6 +134,7 @@ public class GroupChannelListFragment extends Fragment {
         Log.d("LIFECYCLE", "GroupChannelListFragment onPause()");
 
         SendBird.removeChannelHandler(CHANNEL_HANDLER_ID);
+        SendBird.removeNetworkHandler(NETWORK_HANDLER_ID);
     }
 
     @Override

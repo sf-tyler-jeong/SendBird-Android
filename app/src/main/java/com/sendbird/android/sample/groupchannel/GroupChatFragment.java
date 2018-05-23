@@ -44,13 +44,11 @@ import com.sendbird.android.Member;
 import com.sendbird.android.PreviousMessageListQuery;
 import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
-import com.sendbird.android.User;
 import com.sendbird.android.UserMessage;
 import com.sendbird.android.sample.R;
 import com.sendbird.android.sample.utils.FileUtils;
 import com.sendbird.android.sample.utils.MediaPlayerActivity;
 import com.sendbird.android.sample.utils.PhotoViewerActivity;
-import com.sendbird.android.sample.utils.PreferenceUtils;
 import com.sendbird.android.sample.utils.TextUtils;
 import com.sendbird.android.sample.utils.UrlPreviewInfo;
 import com.sendbird.android.sample.utils.WebUtils;
@@ -70,6 +68,7 @@ public class GroupChatFragment extends Fragment {
 
     private static final int CHANNEL_LIST_LIMIT = 30;
     private static final String CHANNEL_HANDLER_ID = "CHANNEL_HANDLER_GROUP_CHANNEL_CHAT";
+    private static final String NETWORK_HANDLER_ID = "NETWORK_HANDLER_GROUP_CHANNEL_CHAT";
 
     private static final int STATE_NORMAL = 0;
     private static final int STATE_EDIT = 1;
@@ -329,6 +328,13 @@ public class GroupChatFragment extends Fragment {
         });
 
         refresh();
+
+        SendBird.addNetworkHandler(NETWORK_HANDLER_ID, new SendBird.NetworkHandler() {
+            @Override
+            public void onNetworkReconnected() {
+                refresh();
+            }
+        });
     }
 
     @Override
@@ -337,6 +343,7 @@ public class GroupChatFragment extends Fragment {
 
         setTypingStatus(false);
         SendBird.removeChannelHandler(CHANNEL_HANDLER_ID);
+        SendBird.removeNetworkHandler(NETWORK_HANDLER_ID);
     }
 
     @Override
