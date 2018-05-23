@@ -95,20 +95,6 @@ public class MemberListActivity extends AppCompatActivity{
 
                 mChannel = groupChannel;
 
-                refreshChannel();
-            }
-        });
-    }
-
-    private void refreshChannel() {
-        mChannel.refresh(new GroupChannel.GroupChannelRefreshHandler() {
-            @Override
-            public void onResult(SendBirdException e) {
-                if (e != null) {
-                    // Error!
-                    return;
-                }
-
                 setMemberList(mChannel.getMembers());
             }
         });

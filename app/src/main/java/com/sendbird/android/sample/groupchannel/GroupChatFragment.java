@@ -232,47 +232,26 @@ public class GroupChatFragment extends Fragment {
     }
 
     private void refresh() {
-        if (mChannel == null) {
-            GroupChannel.getChannel(mChannelUrl, new GroupChannel.GroupChannelGetHandler() {
-                @Override
-                public void onResult(GroupChannel groupChannel, SendBirdException e) {
-                    if (e != null) {
-                        // Error!
-                        e.printStackTrace();
-                        return;
-                    }
-
-                    mChannel = groupChannel;
-                    mChatAdapter.setChannel(mChannel);
-                    mChatAdapter.loadLatestMessages(CHANNEL_LIST_LIMIT, new BaseChannel.GetMessagesHandler() {
-                        @Override
-                        public void onResult(List<BaseMessage> list, SendBirdException e) {
-                            mChatAdapter.markAllMessagesAsRead();
-                        }
-                    });
-                    updateActionBarTitle();
+        GroupChannel.getChannel(mChannelUrl, new GroupChannel.GroupChannelGetHandler() {
+            @Override
+            public void onResult(GroupChannel groupChannel, SendBirdException e) {
+                if (e != null) {
+                    // Error!
+                    e.printStackTrace();
+                    return;
                 }
-            });
-        } else {
-            mChannel.refresh(new GroupChannel.GroupChannelRefreshHandler() {
-                @Override
-                public void onResult(SendBirdException e) {
-                    if (e != null) {
-                        // Error!
-                        e.printStackTrace();
-                        return;
-                    }
 
-                    mChatAdapter.loadLatestMessages(CHANNEL_LIST_LIMIT, new BaseChannel.GetMessagesHandler() {
-                        @Override
-                        public void onResult(List<BaseMessage> list, SendBirdException e) {
-                            mChatAdapter.markAllMessagesAsRead();
-                        }
-                    });
-                    updateActionBarTitle();
-                }
-            });
-        }
+                mChannel = groupChannel;
+                mChatAdapter.setChannel(mChannel);
+                mChatAdapter.loadLatestMessages(CHANNEL_LIST_LIMIT, new BaseChannel.GetMessagesHandler() {
+                    @Override
+                    public void onResult(List<BaseMessage> list, SendBirdException e) {
+                        mChatAdapter.markAllMessagesAsRead();
+                    }
+                });
+                updateActionBarTitle();
+            }
+        });
     }
 
     @Override
