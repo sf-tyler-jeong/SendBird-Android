@@ -216,21 +216,21 @@ public class SettingsActivity extends AppCompatActivity {
         mSwitchNotificationsDoNotDisturb.setChecked(doNotDisturb);
         checkDoNotDisturb(doNotDisturb);
 
-        mSwitchNotifications.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mSwitchNotifications.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
-                if (isChecked) {
+            public void onClick(View v) {
+                if (mSwitchNotifications.isChecked()) {
                     PushUtils.registerPushTokenForCurrentUser(SettingsActivity.this, new SendBird.RegisterPushTokenWithStatusHandler() {
                         @Override
                         public void onRegistered(SendBird.PushTokenRegistrationStatus pushTokenRegistrationStatus, SendBirdException e) {
                             if (e != null) {
-                                mSwitchNotifications.setChecked(!isChecked);
-                                checkNotifications(!isChecked);
+                                mSwitchNotifications.setChecked(false);
+                                checkNotifications(false);
                                 return;
                             }
 
-                            PreferenceUtils.setNotifications(isChecked);
-                            checkNotifications(isChecked);
+                            PreferenceUtils.setNotifications(true);
+                            checkNotifications(true);
                         }
                     });
                 } else {
@@ -238,13 +238,13 @@ public class SettingsActivity extends AppCompatActivity {
                         @Override
                         public void onUnregistered(SendBirdException e) {
                             if (e != null) {
-                                mSwitchNotifications.setChecked(!isChecked);
-                                checkNotifications(!isChecked);
+                                mSwitchNotifications.setChecked(true);
+                                checkNotifications(true);
                                 return;
                             }
 
-                            PreferenceUtils.setNotifications(isChecked);
-                            checkNotifications(isChecked);
+                            PreferenceUtils.setNotifications(false);
+                            checkNotifications(false);
                         }
                     });
                 }

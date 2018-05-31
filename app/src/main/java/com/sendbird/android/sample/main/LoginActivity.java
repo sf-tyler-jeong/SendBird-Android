@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sendbird.android.ConnectionManager;
 import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
 import com.sendbird.android.User;
@@ -89,7 +90,12 @@ public class LoginActivity extends AppCompatActivity {
         showProgressBar(true);
         mConnectButton.setEnabled(false);
 
-        SendBird.connect(userId, new SendBird.ConnectHandler() {
+        ConnectionManager.login(userId, new ConnectionManager.AccessTokenHandler() {
+            @Override
+            public String getAccessToken() {
+                return null;
+            }
+        }, new SendBird.ConnectHandler() {
             @Override
             public void onConnected(User user, SendBirdException e) {
                 // Callback received; hide the progress bar.

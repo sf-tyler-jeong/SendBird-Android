@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.sendbird.android.ConnectionManager;
 import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
 import com.sendbird.android.User;
@@ -32,7 +33,12 @@ public class GroupChannelActivity extends AppCompatActivity{
         boolean fromPushNotification = getIntent().getBooleanExtra("fromPushNotification", false);
         final String channelUrl = getIntent().getStringExtra("groupChannelUrl");
         if (fromPushNotification) {
-            SendBird.connect(PreferenceUtils.getUserId(), new SendBird.ConnectHandler() {
+            ConnectionManager.login(PreferenceUtils.getUserId(), new ConnectionManager.AccessTokenHandler() {
+                @Override
+                public String getAccessToken() {
+                    return null;
+                }
+            }, new SendBird.ConnectHandler() {
                 @Override
                 public void onConnected(User user, SendBirdException e) {
                     if (e != null) {
