@@ -127,14 +127,24 @@ public class MemberInfoActivity extends AppCompatActivity{
 
                 mChannel = groupChannel;
 
-                for (Member member : mChannel.getMembers()) {
-                    if (member.getUserId().equals(mUserId)) {
-                        mMember = member;
-                        break;
-                    }
-                }
+                groupChannel.refresh(new GroupChannel.GroupChannelRefreshHandler() {
+                    @Override
+                    public void onResult(SendBirdException e) {
+                        if (e != null) {
+                            // Error!
+                            return;
+                        }
 
-                refreshUser(mMember.getProfileUrl(), mMember.getNickname(), mMember.isBlockedByMe());
+                        for (Member member : mChannel.getMembers()) {
+                            if (member.getUserId().equals(mUserId)) {
+                                mMember = member;
+                                break;
+                            }
+                        }
+
+                        refreshUser(mMember.getProfileUrl(), mMember.getNickname(), mMember.isBlockedByMe());
+                    }
+                });
             }
         });
     }
