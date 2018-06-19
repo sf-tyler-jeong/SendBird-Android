@@ -33,12 +33,7 @@ public class GroupChannelActivity extends AppCompatActivity{
         boolean fromPushNotification = getIntent().getBooleanExtra("fromPushNotification", false);
         final String channelUrl = getIntent().getStringExtra("groupChannelUrl");
         if (fromPushNotification) {
-            ConnectionManager.login(PreferenceUtils.getUserId(), new ConnectionManager.AccessTokenHandler() {
-                @Override
-                public String getAccessToken() {
-                    return null;
-                }
-            }, new SendBird.ConnectHandler() {
+            ConnectionManager.login(PreferenceUtils.getUserId(), null, new SendBird.ConnectHandler() {
                 @Override
                 public void onConnected(User user, SendBirdException e) {
                     if (e != null) {
