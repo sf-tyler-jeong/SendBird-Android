@@ -9,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.sendbird.android.ConnectionManager;
-import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
 import com.sendbird.android.User;
 import com.sendbird.android.sample.R;
@@ -30,27 +29,22 @@ public class GroupChannelActivity extends AppCompatActivity{
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_left_white_24_dp);
         }
 
-        boolean fromPushNotification = getIntent().getBooleanExtra("fromPushNotification", false);
         final String channelUrl = getIntent().getStringExtra("groupChannelUrl");
-        if (fromPushNotification) {
-            ConnectionManager.login(PreferenceUtils.getUserId(), null, new SendBird.ConnectHandler() {
-                @Override
-                public void onConnected(User user, SendBirdException e) {
-                    if (e != null) {
-                        e.printStackTrace();
-                        return;
-                    }
-
-                    showFragment(savedInstanceState, channelUrl);
+        ConnectionManager.login(PreferenceUtils.getUserId(), null, new ConnectionManager.LoginHandler() {
+            @Override
+            public void onLogin(User user, SendBirdException e) {
+                if (e != null) {
+                    e.printStackTrace();
+                    return;
                 }
-            });
-        } else {
-            showFragment(savedInstanceState, channelUrl);
-        }
+
+                showFragment(savedInstanceState, channelUrl);
+            }
+        });
     }
 
     private void showFragment(Bundle savedInstanceState, String channelUrl) {
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null || channelUrl == null) {
             // Load list of Group Channels
             Fragment fragment = GroupChannelListFragment.newInstance();
 
