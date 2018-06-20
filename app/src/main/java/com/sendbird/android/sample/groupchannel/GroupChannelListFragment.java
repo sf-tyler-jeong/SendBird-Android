@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.sendbird.android.BaseChannel;
 import com.sendbird.android.BaseMessage;
+import com.sendbird.android.ConnectionManager;
 import com.sendbird.android.GroupChannel;
 import com.sendbird.android.GroupChannelListQuery;
 import com.sendbird.android.SendBird;
@@ -36,7 +37,7 @@ public class GroupChannelListFragment extends Fragment {
 
     private static final int CHANNEL_LIST_LIMIT = 15;
     private static final String CHANNEL_HANDLER_ID = "CHANNEL_HANDLER_GROUP_CHANNEL_LIST";
-    private static final String NETWORK_HANDLER_ID = "NETWORK_HANDLER_GROUP_CHANNEL_LIST";
+    private static final String REFRESH_HANDLER_ID = "REFRESH_HANDLER_GROUP_CHANNEL_LIST";
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
@@ -117,9 +118,9 @@ public class GroupChannelListFragment extends Fragment {
 
         refresh();
 
-        SendBird.addNetworkHandler(NETWORK_HANDLER_ID, new SendBird.NetworkHandler() {
+        ConnectionManager.addRefreshHandler(REFRESH_HANDLER_ID, new ConnectionManager.RefreshHandler() {
             @Override
-            public void onNetworkReconnected() {
+            public void onRefresh() {
                 refresh();
             }
         });
@@ -134,7 +135,7 @@ public class GroupChannelListFragment extends Fragment {
         Log.d("LIFECYCLE", "GroupChannelListFragment onPause()");
 
         SendBird.removeChannelHandler(CHANNEL_HANDLER_ID);
-        SendBird.removeNetworkHandler(NETWORK_HANDLER_ID);
+        ConnectionManager.removeRefreshHandler(REFRESH_HANDLER_ID);
     }
 
     @Override

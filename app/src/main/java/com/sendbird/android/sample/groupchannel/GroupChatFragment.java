@@ -38,6 +38,7 @@ import android.widget.Toast;
 import com.sendbird.android.AdminMessage;
 import com.sendbird.android.BaseChannel;
 import com.sendbird.android.BaseMessage;
+import com.sendbird.android.ConnectionManager;
 import com.sendbird.android.FileMessage;
 import com.sendbird.android.GroupChannel;
 import com.sendbird.android.Member;
@@ -68,7 +69,7 @@ public class GroupChatFragment extends Fragment {
 
     private static final int CHANNEL_LIST_LIMIT = 30;
     private static final String CHANNEL_HANDLER_ID = "CHANNEL_HANDLER_GROUP_CHANNEL_CHAT";
-    private static final String NETWORK_HANDLER_ID = "NETWORK_HANDLER_GROUP_CHANNEL_CHAT";
+    private static final String REFRESH_HANDLER_ID = "REFRESH_HANDLER_GROUP_CHANNEL_CHAT";
 
     private static final int STATE_NORMAL = 0;
     private static final int STATE_EDIT = 1;
@@ -330,9 +331,9 @@ public class GroupChatFragment extends Fragment {
 
         refresh();
 
-        SendBird.addNetworkHandler(NETWORK_HANDLER_ID, new SendBird.NetworkHandler() {
+        ConnectionManager.addRefreshHandler(REFRESH_HANDLER_ID, new ConnectionManager.RefreshHandler() {
             @Override
-            public void onNetworkReconnected() {
+            public void onRefresh() {
                 refresh();
             }
         });
@@ -344,7 +345,7 @@ public class GroupChatFragment extends Fragment {
 
         setTypingStatus(false);
         SendBird.removeChannelHandler(CHANNEL_HANDLER_ID);
-        SendBird.removeNetworkHandler(NETWORK_HANDLER_ID);
+        ConnectionManager.removeRefreshHandler(REFRESH_HANDLER_ID);
     }
 
     @Override
