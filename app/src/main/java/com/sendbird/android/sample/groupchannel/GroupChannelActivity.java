@@ -30,7 +30,13 @@ public class GroupChannelActivity extends AppCompatActivity{
         }
 
         final String channelUrl = getIntent().getStringExtra("groupChannelUrl");
-        ConnectionManager.authenticate(PreferenceUtils.getUserId(), null, new ConnectionManager.AuthenticateHandler() {
+
+        ConnectionManager.authenticate(new ConnectionManager.GetAuthInfoHandler() {
+            @Override
+            public void getAuthInfo(ConnectionManager.AuthInfo authInfo) {
+                authInfo.userId = PreferenceUtils.getUserId();
+            }
+        }, new ConnectionManager.AuthenticateHandler() {
             @Override
             public void onAuthenticated(User user, SendBirdException e) {
                 if (e != null) {

@@ -90,7 +90,12 @@ public class LoginActivity extends AppCompatActivity {
         showProgressBar(true);
         mConnectButton.setEnabled(false);
 
-        ConnectionManager.authenticate(userId, null, new ConnectionManager.AuthenticateHandler() {
+        ConnectionManager.authenticate(new ConnectionManager.GetAuthInfoHandler() {
+            @Override
+            public void getAuthInfo(ConnectionManager.AuthInfo authInfo) {
+                authInfo.userId = userId;
+            }
+        }, new ConnectionManager.AuthenticateHandler() {
             @Override
             public void onAuthenticated(User user, SendBirdException e) {
                 // Callback received; hide the progress bar.
