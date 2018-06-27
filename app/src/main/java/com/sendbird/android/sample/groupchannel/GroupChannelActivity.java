@@ -31,9 +31,9 @@ public class GroupChannelActivity extends AppCompatActivity{
 
         final String channelUrl = getIntent().getStringExtra("groupChannelUrl");
 
-        ConnectionManager.authenticate(new ConnectionManager.GetAuthInfoHandler() {
+        ConnectionManager.authenticate(new ConnectionManager.AuthInfoHandler() {
             @Override
-            public void getAuthInfo(ConnectionManager.AuthInfo authInfo) {
+            public void setAuthInfo(ConnectionManager.AuthInfo authInfo) {
                 authInfo.userId = PreferenceUtils.getUserId();
             }
         }, new ConnectionManager.AuthenticateHandler() {
