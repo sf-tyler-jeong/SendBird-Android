@@ -29,8 +29,6 @@ public class GroupChannelActivity extends AppCompatActivity{
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_left_white_24_dp);
         }
 
-        final String channelUrl = getIntent().getStringExtra("groupChannelUrl");
-
         ConnectionManager.authenticate(new ConnectionManager.AuthInfoHandler() {
             @Override
             public void setAuthInfo(ConnectionManager.AuthInfo authInfo) {
@@ -43,10 +41,11 @@ public class GroupChannelActivity extends AppCompatActivity{
                     e.printStackTrace();
                     return;
                 }
-
-                showFragment(savedInstanceState, channelUrl);
             }
         });
+
+        final String channelUrl = getIntent().getStringExtra("groupChannelUrl");
+        showFragment(savedInstanceState, channelUrl);
     }
 
     private void showFragment(Bundle savedInstanceState, String channelUrl) {
