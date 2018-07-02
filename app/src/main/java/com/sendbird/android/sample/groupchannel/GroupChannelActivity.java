@@ -29,10 +29,15 @@ public class GroupChannelActivity extends AppCompatActivity{
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_left_white_24_dp);
         }
 
-        ConnectionManager.authenticate(new ConnectionManager.AuthInfoHandler() {
+        ConnectionManager.authenticate(new ConnectionManager.GetAuthInfoHandler() {
             @Override
-            public void setAuthInfo(ConnectionManager.AuthInfo authInfo) {
-                authInfo.userId = PreferenceUtils.getUserId();
+            public String getUserId() {
+                return PreferenceUtils.getUserId();
+            }
+
+            @Override
+            public String getAccessToken() {
+                return null;
             }
         }, new ConnectionManager.AuthenticateHandler() {
             @Override
@@ -49,7 +54,7 @@ public class GroupChannelActivity extends AppCompatActivity{
     }
 
     private void showFragment(Bundle savedInstanceState, String channelUrl) {
-        if (savedInstanceState == null || channelUrl == null) {
+        if (savedInstanceState == null) {
             // Load list of Group Channels
             Fragment fragment = GroupChannelListFragment.newInstance();
 

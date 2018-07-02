@@ -90,10 +90,15 @@ public class LoginActivity extends AppCompatActivity {
         showProgressBar(true);
         mConnectButton.setEnabled(false);
 
-        ConnectionManager.authenticate(new ConnectionManager.AuthInfoHandler() {
+        ConnectionManager.authenticate(new ConnectionManager.GetAuthInfoHandler() {
             @Override
-            public void setAuthInfo(ConnectionManager.AuthInfo authInfo) {
-                authInfo.userId = userId;
+            public String getUserId() {
+                return userId;
+            }
+
+            @Override
+            public String getAccessToken() {
+                return null;
             }
         }, new ConnectionManager.AuthenticateHandler() {
             @Override
