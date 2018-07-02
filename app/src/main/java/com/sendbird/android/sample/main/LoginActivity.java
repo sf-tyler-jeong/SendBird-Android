@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
         showProgressBar(true);
         mConnectButton.setEnabled(false);
 
-        ConnectionManager.authenticate(new ConnectionManager.GetAuthInfoHandler() {
+        ConnectionManager.authenticate(new ConnectionManager.AuthInfoHandler() {
             @Override
             public String getUserId() {
                 return userId;
@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
             public String getAccessToken() {
                 return null;
             }
-        }, new ConnectionManager.AuthenticateHandler() {
+        }, new ConnectionManager.AuthHandler() {
             @Override
             public void onAuthenticated(User user, SendBirdException e) {
                 // Callback received; hide the progress bar.

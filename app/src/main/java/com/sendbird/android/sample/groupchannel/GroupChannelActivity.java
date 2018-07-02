@@ -29,7 +29,7 @@ public class GroupChannelActivity extends AppCompatActivity{
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_left_white_24_dp);
         }
 
-        ConnectionManager.authenticate(new ConnectionManager.GetAuthInfoHandler() {
+        ConnectionManager.authenticate(new ConnectionManager.AuthInfoHandler() {
             @Override
             public String getUserId() {
                 return PreferenceUtils.getUserId();
@@ -39,7 +39,7 @@ public class GroupChannelActivity extends AppCompatActivity{
             public String getAccessToken() {
                 return null;
             }
-        }, new ConnectionManager.AuthenticateHandler() {
+        }, new ConnectionManager.AuthHandler() {
             @Override
             public void onAuthenticated(User user, SendBirdException e) {
                 if (e != null) {
