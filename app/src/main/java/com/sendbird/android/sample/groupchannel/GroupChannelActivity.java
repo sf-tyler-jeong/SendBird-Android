@@ -32,20 +32,7 @@ public class GroupChannelActivity extends AppCompatActivity{
         ConnectionManager.authenticate(new ConnectionManager.AuthInfoRequestHandler() {
             @Override
             public void onAuthInfoRequest(ConnectionManager.AuthInfoResponseHandler authInfoResponseHandler) {
-                final String userId = PreferenceUtils.getUserId();
-                final String accessToken = null;
-
-                authInfoResponseHandler.onAuthInfoResponse(new ConnectionManager.AuthInfoHandler() {
-                    @Override
-                    public String getUserId() {
-                        return userId;
-                    }
-
-                    @Override
-                    public String getAccessToken() {
-                        return accessToken;
-                    }
-                });
+                authInfoResponseHandler.onAuthInfoResponse(PreferenceUtils.getUserId(), null);
             }
         }, new ConnectionManager.AuthenticateHandler() {
             @Override

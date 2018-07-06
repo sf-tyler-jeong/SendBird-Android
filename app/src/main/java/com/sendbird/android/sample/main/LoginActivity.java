@@ -93,17 +93,7 @@ public class LoginActivity extends AppCompatActivity {
         ConnectionManager.authenticate(new ConnectionManager.AuthInfoRequestHandler() {
             @Override
             public void onAuthInfoRequest(ConnectionManager.AuthInfoResponseHandler authInfoResponseHandler) {
-                authInfoResponseHandler.onAuthInfoResponse(new ConnectionManager.AuthInfoHandler() {
-                    @Override
-                    public String getUserId() {
-                        return userId;
-                    }
-
-                    @Override
-                    public String getAccessToken() {
-                        return null;
-                    }
-                });
+                authInfoResponseHandler.onAuthInfoResponse(userId, null);
             }
         }, new ConnectionManager.AuthenticateHandler() {
             @Override

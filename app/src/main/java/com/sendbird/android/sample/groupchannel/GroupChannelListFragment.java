@@ -120,7 +120,7 @@ public class GroupChannelListFragment extends Fragment {
 
         ConnectionManager.addRefreshHandler(REFRESH_HANDLER_ID, new ConnectionManager.RefreshHandler() {
             @Override
-            public void onRefresh() {
+            public void onReadyToRefresh() {
                 refresh();
             }
         });
