@@ -31,8 +31,8 @@ public class GroupChannelActivity extends AppCompatActivity{
 
         ConnectionManager.authenticate(new ConnectionManager.AuthInfoRequestHandler() {
             @Override
-            public void onAuthInfoRequest(ConnectionManager.AuthInfoResponseHandler authInfoResponseHandler) {
-                authInfoResponseHandler.onAuthInfoResponse(PreferenceUtils.getUserId(), null);
+            public void onAuthInfoRequest(ConnectionManager.AuthInfoResponse authInfoResponse) {
+                authInfoResponse.setAuthInfo(PreferenceUtils.getUserId(), null);
             }
         }, new ConnectionManager.AuthenticateHandler() {
             @Override

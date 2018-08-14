@@ -331,9 +331,9 @@ public class GroupChatFragment extends Fragment {
 
         refresh();
 
-        ConnectionManager.addRefreshHandler(REFRESH_HANDLER_ID, new ConnectionManager.RefreshHandler() {
+        ConnectionManager.addNetworkHandler(REFRESH_HANDLER_ID, new ConnectionManager.NetworkHandler() {
             @Override
-            public void onReadyToRefresh() {
+            public void onReconnected() {
                 refresh();
             }
         });
@@ -345,7 +345,7 @@ public class GroupChatFragment extends Fragment {
 
         setTypingStatus(false);
         SendBird.removeChannelHandler(CHANNEL_HANDLER_ID);
-        ConnectionManager.removeRefreshHandler(REFRESH_HANDLER_ID);
+        ConnectionManager.removeNetworkHandler(REFRESH_HANDLER_ID);
     }
 
     @Override
