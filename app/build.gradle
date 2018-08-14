@@ -37,7 +37,7 @@ dependencies {
     })
 
     // SendBird
-    implementation 'com.sendbird.sdk:sendbird-android-sdk:3.0.60'
+    implementation 'com.sendbird.sdk:sendbird-android-sdk:3.0.68'
 
     // Android support libraries
     implementation 'com.android.support:appcompat-v7:27.1.1'
@@ -47,7 +47,7 @@ dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
 
     // Firebase
-    implementation 'com.google.firebase:firebase-messaging:15.0.2'
+    implementation 'com.google.firebase:firebase-messaging:17.3.0'
 
     // External libraries
     implementation 'com.github.bumptech.glide:glide:4.3.1'
