@@ -92,8 +92,8 @@ public class LoginActivity extends AppCompatActivity {
 
         ConnectionManager.authenticate(new ConnectionManager.AuthInfoRequestHandler() {
             @Override
-            public void onAuthInfoRequest(ConnectionManager.AuthInfoResponse authInfoResponse) {
-                authInfoResponse.setAuthInfo(userId, null);
+            public void onAuthInfoRequest(ConnectionManager.AuthInfoRequester authInfoRequester) {
+                authInfoRequester.setAuthInfo(userId, null);
             }
         }, new ConnectionManager.AuthenticateHandler() {
             @Override
